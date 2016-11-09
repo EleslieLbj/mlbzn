@@ -1,0 +1,7 @@
+app 签名文件密码
+
+lbzn.jks
+password: 123456
+
+alias: lbznl
+password: 123456

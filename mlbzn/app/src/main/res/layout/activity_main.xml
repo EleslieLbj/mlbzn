@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:background="@android:color/darker_gray"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:id="@+id/ll">-->
+    <!--</LinearLayout>-->
+    <!--android:layout_below="@id/ll"-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:background="#232429"
+        android:id="@+id/rt_root">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:visibility="gone"
+            android:text="返回"
+            android:textSize="16sp"
+            android:textColor="@android:color/white"
+            android:drawableLeft="@drawable/return1"
+            android:drawablePadding="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_centerVertical="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/tv_lbzn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:layout_centerVertical="true"
+            android:textColor="@android:color/white"
+            android:gravity="center"/>
+        <TextView
+            android:id="@+id/tv_shared"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:layout_centerVertical="true"
+            android:textColor="@android:color/white"
+            android:text="分享"
+            android:visibility="gone"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:layout_alignParentRight="true"/>
+
+    </RelativeLayout>
+
+    <com.tencent.smtt.sdk.WebView
+        android:id="@+id/wv"
+        android:layout_below="@id/rt_root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="WebView"/>
+    <ProgressBar
+        android:id="@+id/pb_progressBar"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminateDrawable="@drawable/custom_progress"/>
+
+</RelativeLayout>
