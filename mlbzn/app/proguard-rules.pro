@@ -222,3 +222,19 @@ public static final int *;
 -keepclassmembers class fqcn.of.javascript.interface.for.webview {
    public *;
 }
+
+
+#如果有引用v4包可以添加下面这行
+-keep class android.support.v4.** { *; }
+#如果引用了v4包或者v7包，可以忽略警告，因为用不到android.support
+-dontwarn android.support.**
+
+# ShareSDK 相关的混淆配置
+-keep class cn.sharesdk.** { *; }
+-keep class com.sina.sso.** { *; }
+
+#umeng相关的混淆配置
+-keep class com.umeng.** { *; }
+-keep class com.umeng.analytics.** { *; }
+-keep class com.umeng.common.** { *; }
+-keep class com.umeng.newxp.** { *; }
