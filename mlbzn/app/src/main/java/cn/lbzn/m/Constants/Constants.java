@@ -23,5 +23,7 @@ public interface Constants {
      String CURRENT_LOAD_TIME = "CURRENT_LOAD_TIME";
     // 忘记密码
      String FORGER_PWD = "forger_pwd";
+    // 丢失session的退出
+    String LOGIN_LOST="http://m3.lbzn.cn/loginout.aspx";
 
 }

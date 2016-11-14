@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -109,9 +110,11 @@ public class LockSetupActivity extends BaseActivity implements LockPatternView.O
         // 获取用户名  @boming.liao 16/9/14
         user_name = PrefUtils.getString(LockSetupActivity.this, USER_NAME, "");
 //        Log.d("user_name",user_name);
+        if(!TextUtils.isEmpty(user_name)){
             String front_3 = user_name.substring(0,3);
             String later_4 = user_name.substring(7);
             tvNumber.setText(front_3+"****"+later_4);
+        }
 //        // 获取手势密码 @boming.liao 16/9/14
 //        SharedPreferences preferences = getSharedPreferences(SplashActivity.LOCK,MODE_PRIVATE);
 //        patternString = preferences.getString(SplashActivity.LOCK_KEY,null);

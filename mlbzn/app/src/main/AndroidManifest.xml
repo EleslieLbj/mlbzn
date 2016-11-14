@@ -42,6 +42,7 @@
             android:name=".BaseActivity"
             android:screenOrientation="portrait">
         </activity>
+
         <activity
             android:name=".SplashActivity"
             android:screenOrientation="portrait">
@@ -51,6 +52,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
         <activity
             android:name=".GuideActivity"
             android:screenOrientation="portrait">

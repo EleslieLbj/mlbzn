@@ -37,6 +37,13 @@ public class SplashActivity extends BaseActivity {
     private String user_name;
     private String  res;
     public static final String USER_NAME = "user_name";
+//    private Handler mHandler = new Handler(){
+//        @Override
+//        public void handleMessage(Message msg) {
+//            super.handleMessage(msg);
+//
+//        }
+//    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,14 +72,16 @@ public class SplashActivity extends BaseActivity {
                 // 判断是否更新
                 if(!update){
                 // 取消更新
-                  init();
+//                  init();
+                    jumpNextPage();
                 }
 
             }
             @Override
             public void cancel() {
                 // 取消更新
-                   init();
+//                   init();
+                jumpNextPage();
             }
 
             @Override
@@ -108,7 +117,10 @@ public class SplashActivity extends BaseActivity {
                     }else {
                         // 跳转到手势密码设置页面
                         // startActivity(new Intent(SplashActivity.this, LockSetupActivity.class));
-                        startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                        // 跳转到主页
+                        Intent intent = new Intent(new Intent(SplashActivity.this, MainActivity.class));
+                        startActivity(intent);
+//                        overridePendingTransition(R.anim.in_from_right,R.anim.out_to_left);
                     }
                 }
             }
@@ -116,6 +128,7 @@ public class SplashActivity extends BaseActivity {
             );
         }else{
             startActivity(new Intent(SplashActivity.this, MainActivity.class));
+//            overridePendingTransition(R.anim.activity_close_in_anim,R.anim.activity_close_out_anim);
         }
     }
 

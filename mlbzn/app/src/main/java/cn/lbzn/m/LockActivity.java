@@ -138,7 +138,7 @@ public class LockActivity extends BaseActivity implements LockPatternView.OnPatt
                     .post()
                     .url(Constants.FIRST_URL2+"services/device.aspx?type=DeviceLogin")
                     .addHeader("cookie",LbApplication.getInstance().getSession())
-                    .addParams("UserName", user_name)
+                    .addParams("UserName", (user_name==null)?"":user_name)
                     .addParams("Password", patternToString2)
                     .addParams("IMEI",deviceId)
                     .build()
@@ -162,7 +162,7 @@ public class LockActivity extends BaseActivity implements LockPatternView.OnPatt
                     .post()
                     .url(Constants.FIRST_URL2+"services/device.aspx?type=CloseMemberDevice")
                     .addHeader("cookie",LbApplication.getInstance().getSession())
-                    .addParams("UserName", user_name)
+                    .addParams("UserName", (user_name==null)?"":user_name)
                     .addParams("Password", patternToString2)
                     .addParams("IMEI",deviceId)
                     .build()
@@ -370,10 +370,18 @@ public class LockActivity extends BaseActivity implements LockPatternView.OnPatt
                     intent.putExtra("forget_pwd","forget_pwd");
                     startActivity(intent);
                     finish();
-                }else{
+                }else if("OtherPager".equals(OtherPager)){
+                    // 在失去session重新设置手势密码登录
+                    Intent intent=new Intent(LockActivity.this,MainActivity.class);
+                    intent.putExtra("fromSesIdForPwd","fromSesIdForPwd");
+                    startActivity(intent);
+                    finish();
+                }
+                else{
 //                    Intent intent = new Intent(LockActivity.this, MainActivity.class);
 //                    intent.putExtra("forget_pwd","forget_pwd");
 //                    startActivity(intent);
+                    // 直接忘记密码从后台进入
                     Intent intent = new Intent();
                     intent.putExtra("login",1);
                     setResult(MAIN_RECODE1,intent);
@@ -383,7 +391,7 @@ public class LockActivity extends BaseActivity implements LockPatternView.OnPatt
                 // 当忘记手势密码的时候，清空设置手势密码状态 @boming.liao 929
                //  PrefUtils.remove(LockActivity.this,STATUS_MIMA);
                // 清空用户名
-              //  PrefUtils.remove(LockActivity.this,USER_NAME);
+//                PrefUtils.remove(LockActivity.this,USER_NAME);
                 break;
             case R.id.tv_account:
                 // 账户登录
@@ -397,8 +405,16 @@ public class LockActivity extends BaseActivity implements LockPatternView.OnPatt
 //                    intent.putExtra("login",1);
 //                    setResult(MAIN_RECODE2,intent);
 //                    finish();
-                }else{
+                }else if("OtherPager".equals(OtherPager)){
+                    // 在失去session的时候用其他账户登录
+                    Intent intent=new Intent(LockActivity.this,MainActivity.class);
+                    intent.putExtra("fromOtherAccount","fromOtherAccount");
+                    startActivity(intent);
+                    finish();
+                }
+                else{
                     // 从后台忘记密码,然后从其他账户登录
+                    // 忘记密码用账户登录从后台进入
                     Intent intent = new Intent();
                     intent.putExtra("login",1);
                     setResult(MAIN_RECODE1,intent);
@@ -408,7 +424,7 @@ public class LockActivity extends BaseActivity implements LockPatternView.OnPatt
                 // 当忘记手势密码的时候，清空设置手势密码状态 @boming.liao  929
                // PrefUtils.remove(LockActivity.this,STATUS_MIMA);
                 // 清空用户名
-              //  PrefUtils.remove(LockActivity.this,USER_NAME);
+//                PrefUtils.remove(LockActivity.this,USER_NAME);
             break;
         }
     }

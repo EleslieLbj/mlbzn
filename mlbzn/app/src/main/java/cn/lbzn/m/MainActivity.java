@@ -93,7 +93,10 @@ public class MainActivity extends BaseActivity {
     private boolean isLocking;
     private String forget_pwd;
     private String other_account;
+    private String  fromSesIdForPwd;
+    private String fromOtherAccount;
     private ProgressBar progressBar;
+
 
     private boolean isOnPause = false;
 
@@ -155,6 +158,8 @@ public class MainActivity extends BaseActivity {
         //        login = getIntent().getIntExtra("login", 0);
         forget_pwd = getIntent().getStringExtra("forget_pwd");
         other_account = getIntent().getStringExtra("other_account");
+        fromSesIdForPwd=getIntent().getStringExtra("fromSesIdForPwd");
+        fromOtherAccount= getIntent().getStringExtra("fromOtherAccount");
         // 初始化TextView
         tvShared = (TextView) findViewById(R.id.tv_shared);
         mListUrlPager.add(Constants.ACCOUNT_URL);
@@ -190,23 +195,58 @@ public class MainActivity extends BaseActivity {
         // 加载url
         if(!TextUtils.isEmpty(forget_pwd)){
             if(forget_pwd.equals("forget_pwd")){
+                // 获取Cookie
+                final String my_cookie = PrefUtils.getString(MainActivity.this, MY_COOKIE_STR, "");
                 // 清空用户名
                 PrefUtils.remove(MainActivity.this,USER_NAME);
                 CookieSyncManager.createInstance(this);
                 CookieManager cookieManager = CookieManager.getInstance();
                 cookieManager.removeAllCookie();
-                wv.loadUrl(Constants.ENTRANCE_URL_LOGIN);
+                cookieManager.setCookie(Constants.LOGIN_LOST, my_cookie);
+                CookieSyncManager.getInstance().sync();
+                wv.loadUrl(Constants.LOGIN_LOST);
             }
         }else if(!TextUtils.isEmpty(other_account)){
              if (other_account.equals("other_account")){
+                 // 获取Cookie
+                 final String my_cookie = PrefUtils.getString(MainActivity.this, MY_COOKIE_STR, "");
                  // 清空用户名
                  PrefUtils.remove(MainActivity.this,USER_NAME);
                  CookieSyncManager.createInstance(this);
                  CookieManager cookieManager = CookieManager.getInstance();
                  cookieManager.removeAllCookie();
-                wv.loadUrl(Constants.ENTRANCE_URL_LOGIN);
+                 cookieManager.setCookie(Constants.LOGIN_LOST, my_cookie);
+                 CookieSyncManager.getInstance().sync();
+                wv.loadUrl(Constants.LOGIN_LOST);
             }
-        }else{
+        }else if(!TextUtils.isEmpty(fromSesIdForPwd)){
+            if ("fromSesIdForPwd".equals(fromSesIdForPwd)) {
+                // 获取Cookie
+                final String my_cookie = PrefUtils.getString(MainActivity.this, MY_COOKIE_STR, "");
+                // 清空用户名
+                PrefUtils.remove(MainActivity.this,USER_NAME);
+                CookieSyncManager.createInstance(this);
+                CookieManager cookieManager = CookieManager.getInstance();
+                cookieManager.removeAllCookie();
+                cookieManager.setCookie(Constants.LOGIN_LOST, my_cookie);
+                CookieSyncManager.getInstance().sync();
+                wv.loadUrl(Constants.LOGIN_LOST);
+            }
+        }else if(!TextUtils.isEmpty(fromOtherAccount)){
+            if ("fromOtherAccount".equals(fromOtherAccount)) {
+                // 获取Cookie
+                final String my_cookie = PrefUtils.getString(MainActivity.this, MY_COOKIE_STR, "");
+                // 清空用户名
+                PrefUtils.remove(MainActivity.this,USER_NAME);
+                CookieSyncManager.createInstance(this);
+                CookieManager cookieManager = CookieManager.getInstance();
+                cookieManager.removeAllCookie();
+                cookieManager.setCookie(Constants.LOGIN_LOST, my_cookie);
+                CookieSyncManager.getInstance().sync();
+                wv.loadUrl(Constants.LOGIN_LOST);
+            }
+        }
+        else{
             // 获取Cookie
             final String my_cookie = PrefUtils.getString(MainActivity.this, MY_COOKIE_STR, "");
             Log.e("MyCookie-->9",my_cookie);
@@ -243,22 +283,6 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    private void hardwareAccelerate() {
-        if (MainActivity.this.getPhoneSDKInt()>=14){
-            getWindow().setFlags(0x1000000, 0x1000000);
-        }
-    }
-    // 获取手机的SDK值
-    public int getPhoneSDKInt() {
-        int version = 0;
-        try {
-            version = Integer.valueOf(android.os.Build.VERSION.SDK);
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
-        return version;
-    }
-
     private void clickJump() {
         String str = web_url;
         if (str.equals(Constants.FIRST_URL2+"member/signin.aspx")) {
@@ -289,7 +313,7 @@ public class MainActivity extends BaseActivity {
 
     private boolean isColse = true;
     private boolean isClick=false;
-      private  String userName;
+    private  String userName;
     // 客户端与h5进行交互的方法
     public class JsInterface {
         // 调起设置手势密码
@@ -337,9 +361,12 @@ public class MainActivity extends BaseActivity {
         public void exitUserName(String str) {
             Log.e("test", "保存用户名退出时获取用户名====" + str);
             // 如果退出了，把设置手势密码的状态置0
-            initData("");
+//            initData("");
             //  如果退出登录就清空用户名
             PrefUtils.remove(MainActivity.this, USER_NAME);
+            userName="";
+            //  清空设置手势密码状态
+            PrefUtils.remove(MainActivity.this,STATUS_MIMA);
             // 清空数据
             PrefUtils.remove(MainActivity.this,"include_houtaiAndSplash");
             PrefUtils.setBoolean(MainActivity.this, Constants.FORGER_PWD,false);
@@ -390,7 +417,7 @@ public class MainActivity extends BaseActivity {
                     CookieManager cookieManager = CookieManager.getInstance();
                     cookieManager.removeAllCookie();
                     // 跳转登录界面
-                    wv.loadUrl(Constants.ENTRANCE_URL_LOGIN);
+                    wv.loadUrl(Constants.LOGIN_LOST);
                 }
             }
         } else if (requestCode == MAIN_RESULT && resultCode == MAIN_RECODE2) {
@@ -407,7 +434,7 @@ public class MainActivity extends BaseActivity {
                     CookieManager cookieManager = CookieManager.getInstance();
                     cookieManager.removeAllCookie();
                     // 跳转登录界面
-                    wv.loadUrl(Constants.ENTRANCE_URL_LOGIN);
+                    wv.loadUrl(Constants.LOGIN_LOST);
                 }
             }
         }else if (requestCode == MAIN_RESULT && resultCode == 8){
@@ -446,8 +473,10 @@ public class MainActivity extends BaseActivity {
         Data data = gson.fromJson(result, Data.class);
         String res = data.getRes();
         Log.d("fromJson", res);
-        // 保存手势密码状态到首选项
-        PrefUtils.setString(MainActivity.this, STATUS_MIMA, res);
+        // 清除设置手势密码状态
+        if ("0".equals(res)) {
+         PrefUtils.remove(MainActivity.this,STATUS_MIMA);
+        }
     }
 
 
@@ -536,6 +565,7 @@ public class MainActivity extends BaseActivity {
                         Log.e("test", "状态: " + status);
                             if ("1".equals(status)) {
                             if (System.currentTimeMillis() - Long.parseLong(lastLoadTime) > 2 * 60* 1000) {
+                                // 进后台后，从新进入前台需要用手势密码登录
                                 Intent intent = new Intent(MainActivity.this, LockActivity.class);
                                 startActivityForResult(intent,MAIN_RESULT);
                             }
@@ -544,7 +574,7 @@ public class MainActivity extends BaseActivity {
                 });
             }
         }
-        Log.e("test", "onRestart()");
+        Log.e("test", "Restart()");
     }
 
     @Override
@@ -671,7 +701,6 @@ public class MainActivity extends BaseActivity {
     public boolean isRunningForeground() {
         String packageName = getPackageName(this);
         String topActivityClassName = getTopActivityName(this);
-        System.out.println("packageName=" + packageName + ",topActivityClassName=" + topActivityClassName);
         if (packageName != null && topActivityClassName != null && topActivityClassName.startsWith(packageName)) {
             System.out.println("---> isRunningForeGround");
             return true;
@@ -824,8 +853,12 @@ public class MainActivity extends BaseActivity {
             isFirstLaunch = false;
             Log.d(TAG, "onCreate_cookie_url:" + url);
 
-            if ((Constants.FIRST_URL2+"login.aspx?o=lostuser&rel=%2fmember%2finvest%2finvesttqproject.aspx").equals(url)) {
-                  return true;
+//            if ((Constants.FIRST_URL2+"login.aspx?o=lostuser&rel=%2fmember%2finvest%2finvesttqproject.aspx").equals(url)) {
+//                  return true;
+//            }
+
+            if(url.contains(Constants.FIRST_URL2+"login.aspx?o=lostuser")){
+                return  true;
             }
 
             // 隐藏和显示返回键
@@ -896,6 +929,7 @@ public class MainActivity extends BaseActivity {
                                     }
                                 }
                             }
+
                         });
             }
             if (System.currentTimeMillis() - Long.parseLong(lastLoadTime) > 3 * 1000) {
@@ -1002,15 +1036,17 @@ public class MainActivity extends BaseActivity {
                             if ("1".equals(isLogin)) {
                                 // 保存用户名
                                 PrefUtils.setString(MainActivity.this, USER_NAME, userName);
-                            }
-                            if ("1".equals(isSet)) {
+                                // 有session就设置手势密码状态
+                                if ("1".equals(isSet)) {
                                 // 保存手势密码状态到首选项
-                                PrefUtils.setString(MainActivity.this, STATUS_MIMA, isSet);
+                                    PrefUtils.setString(MainActivity.this, STATUS_MIMA, isSet);
+                                }else{
+                                    PrefUtils.remove(MainActivity.this,STATUS_MIMA);
+                                }
+                            }else{
+                                PrefUtils.remove(MainActivity.this,USER_NAME);
                             }
-//                            else{
-//                                // 保存手势密码状态到首选项
-//                                PrefUtils.setString(MainActivity.this, STATUS_MIMA, "0");
-//                            }
+
                         }catch (Exception e){
                             e.printStackTrace();
                         }
